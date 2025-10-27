@@ -1,0 +1,87 @@
+// ==========================
+// 浏览器默认样式清空
+// ==========================
+
+/* 0. 盒模型统一 */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* 1. 去除所有默认间距 */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* 2. 列表去符号 */
+ol,
+ul {
+    list-style: none;
+}
+
+/* 3. 链接、按钮、表单元素无默认外观 */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+button,
+input,
+textarea,
+select {
+    font: inherit; // 继承字体
+    color: inherit;
+    background: transparent;
+    border: none;
+    outline: none;
+    appearance: none; // 移除系统样式
+}
+
+/* 4. 图片、svg 默认块级 + 自适应 */
+img,
+picture,
+svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+/* 5. 表格合并边框 */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* 6. 引用去斜体 */
+blockquote,
+q {
+    quotes: none;
+}
+blockquote::before,
+blockquote::after,
+q::before,
+q::after {
+    content: '';
+}
+
+/* 7. 统一行高 */
+body {
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* 8. 去除 HTML5 元素默认 display 差异 */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+    display: block;
+}

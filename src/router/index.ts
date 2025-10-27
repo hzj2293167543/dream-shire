@@ -1,0 +1,13 @@
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+
+const routes: RouteRecordRaw[] = [
+    { path: '/', name: 'Home', component: () => import('@/views/rich-text-editor/RichTextEditor.vue') }
+    //   { path: '/about', name: 'About', component: () => import('@/views/About.vue') },
+]
+
+const router = createRouter({
+    history: createWebHistory(),
+    routes
+})
+
+export default router
