@@ -8,6 +8,19 @@
   </head>
   <body>
     <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/main.js">
+              !function(){
+        const doc = document.documentElement;
+        const maxFont = 24;          // 根字体上限
+        const minFont = 12;          // 根字体下限
+        function setRoot(){
+          let val = doc.clientWidth / 80;   // 80 等分，数值随意调
+          val = Math.max(minFont, Math.min(maxFont, val));
+          doc.style.fontSize = val + 'px';
+        }
+        setRoot();
+        window.addEventListener('resize', setRoot);
+      }();
+    </script>
   </body>
 </html>

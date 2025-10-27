@@ -1,13 +1,13 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
 const routes: RouteRecordRaw[] = [
-    { path: '/', name: 'Home', component: () => import('@/views/rich-text-editor/RichTextEditor.vue') }
-    //   { path: '/about', name: 'About', component: () => import('@/views/About.vue') },
-]
+  { path: "/", name: "Home", component: () => import("@/views/index.vue") },
+  //   { path: '/about', name: 'About', component: () => import('@/views/About.vue') },
+];
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes
-})
+  history: createWebHistory(),
+  routes,
+});
 
-export default router
+export default router;

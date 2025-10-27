@@ -1,0 +1,320 @@
+@use "sass:math";
+@use "./basic.scss" as *;
+
+@mixin FCC($direction: row) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: $direction;
+}
+
+@mixin FEC($direction: row) {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-direction: $direction;
+}
+
+@mixin FCE($direction: row) {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  flex-direction: $direction;
+}
+
+@mixin FCS($direction: row) {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: $direction;
+}
+@mixin FES($direction: row) {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  flex-direction: $direction;
+}
+
+@mixin FCH($direction: row) {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  flex-direction: $direction;
+}
+
+@mixin FCB($direction: row) {
+  display: flex;
+  justify-content: center;
+  align-items: space-between;
+  flex-direction: $direction;
+}
+
+@mixin FSC($direction: row) {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: $direction;
+}
+
+@mixin FSE($direction: row) {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  flex-direction: $direction;
+}
+
+@mixin FAC($direction: row) {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: $direction;
+}
+
+@mixin TranslateX($space) {
+  transform: translateX(1vw * $heightRatio * $space);
+}
+
+@mixin FBC($direction: row) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: $direction;
+}
+
+@mixin FBS($direction: row) {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-direction: $direction;
+}
+
+@mixin FSS($direction: row) {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: $direction;
+}
+
+@mixin FBH($direction: row) {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  flex-direction: $direction;
+}
+
+@mixin FHC($direction: row) {
+  display: flex;
+  justify-content: stretch;
+  align-items: center;
+  flex-direction: $direction;
+}
+
+@mixin FHH($direction: row) {
+  display: flex;
+  justify-content: stretch;
+  align-items: stretch;
+  flex-direction: $direction;
+}
+
+@mixin FHS($direction: row) {
+  display: flex;
+  justify-content: stretch;
+  align-items: start;
+  flex-direction: $direction;
+}
+
+@mixin GNT {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@mixin GNV($v) {
+  display: grid;
+  grid-template-columns: repeat($v, 1fr);
+}
+
+@mixin GapVw($c) {
+  gap: math.div(1vw * $c, $widthRatio);
+}
+
+@mixin GapCRVw($c, $r) {
+  gap: math.div(1vw * $c, $widthRatio) math.div(1vw * $r, $heightRatio);
+  gap: math.div(1vw * $c, $widthRatio) math.div(1vw * $c, $heightRatio);
+}
+
+@mixin BorderWidth($r) {
+  border-width: math.div(1px * $r, $widthRatio);
+}
+
+@mixin TextShadowXY($x, $y, $blur-radius, $color) {
+  text-shadow: math.div(1vw * $x, $widthRatio) math.div(1vw * $y, $widthRatio)
+    math.div(1vw * $blur-radius, $widthRatio) $color; // 左右阴影
+  text-shadow: math.div(1vw * $x, $widthRatio) math.div(1vw * $y, $widthRatio)
+    math.div(1vw * $blur-radius, $widthRatio) $color; //上下阴影
+}
+
+@mixin TextShadow($l, $r, $t, $b, $br, $color) {
+  // 左、右、上、下 四层阴影
+  text-shadow:
+    math.div(-1vw * $l, $widthRatio) 0 math.div(1vw * $br, $widthRatio) $color,
+    // 左
+    math.div(1vw * $r, $widthRatio) 0 math.div(1vw * $br, $widthRatio) $color,
+    // 右
+    0 math.div(-1vw * $t, $widthRatio) math.div(1vw * $br, $widthRatio) $color,
+    // 上
+    0 math.div(1vw * $b, $widthRatio) math.div(1vw * $br, $widthRatio) $color; // 下
+}
+
+// @mixin BoxShadow($h, $v, $b, $l, $color) {
+//     box-shadow: math.div(1vw * $h, $widthRatio) math.div(1vw * $v, $widthRatio) math.div(1vw * $b, $widthRatio) math.div(1vw * $l, $widthRatio) $color;
+// }
+
+@mixin TextBorder($r, $color) {
+  text-shadow:
+    math.div(1vw * -$r, $widthRatio) math.div(1vw * -$r, $widthRatio) 0px $color,
+    /* 上左阴影 */ math.div(1vw * $r, $widthRatio)
+      math.div(1vw * -$r, $widthRatio) 0px $color,
+    /* 上右阴影 */ math.div(1vw * -$r, $widthRatio)
+      math.div(1vw * $r, $widthRatio) 0px $color,
+    /* 下左阴影 */ math.div(1vw * $r, $widthRatio)
+      math.div(1vw * $r, $widthRatio) 0px $color; /* 下右阴影 */
+}
+
+@mixin DropBorder($r, $color) {
+  filter: drop-shadow(
+      math.div(1vw * $r, $widthRatio) math.div(1vw * $r, $widthRatio) 0px black
+    )
+    /* 右下阴影 */
+    drop-shadow(
+      math.div(1vw * -$r, $widthRatio) math.div(1vw * -$r, $widthRatio) 0px
+        black
+    )
+    /* 左上阴影 */
+    drop-shadow(
+      math.div(1vw * $r, $widthRatio) math.div(1vw * -$r, $widthRatio) 0px black
+    )
+    /* 右上阴影 */
+    drop-shadow(
+      math.div(1vw * -$r, $widthRatio) math.div(1vw * $r, $widthRatio) 0px black
+    ); /* 左下阴影 */
+}
+
+@mixin DropShadow($x, $y, $blur-radius, $color) {
+  filter: drop-shadow(2px 2px 0px black) /* 右下阴影 */
+    drop-shadow(-2px -2px 0px black) /* 左上阴影 */
+    drop-shadow(2px -2px 0px black) /* 右上阴影 */
+    drop-shadow(-2px 2px 0px black); /* 左下阴影 */
+}
+
+@mixin IFEE($direction: row) {
+  display: inline-flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  flex-direction: $direction;
+}
+
+@mixin IFCC($direction: row) {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: $direction;
+}
+
+@mixin IFCE($direction: row) {
+  display: inline-flex;
+  justify-content: center;
+  align-items: flex-end;
+  flex-direction: $direction;
+}
+
+@mixin TranslateX($t) {
+  transform: translateX(1vw * $heightRatio * $t);
+}
+
+@mixin Translate($x, $y) {
+  transform: translateX(1vw * $heightRatio * $x)
+    translateY(1vw * $heightRatio * $y);
+  transform: translateX(1vw * $heightRatio * $x)
+    translateY(1vw * $heightRatio * $y);
+}
+
+@mixin WhHBox($w, $h) {
+  @include Width($w);
+  @include hHeight($h);
+}
+
+@mixin WHBox($w, $h) {
+  @include Width($w);
+  @include wHeight($h);
+}
+
+@mixin PaddingCR($C, $R) {
+  @include Padding($C, $R, $C, $R);
+}
+
+@mixin PaddingC($C) {
+  @include Padding($C, 0, $C, 0);
+}
+
+@mixin PaddingR($R) {
+  @include Padding(0, $R, 0, $R);
+}
+
+@mixin PaddingALL($r) {
+  @include Padding($r, $r, $r, $r);
+}
+
+@mixin MarginCR($C, $R) {
+  @include Margin($C, $R, $C, $R);
+}
+
+@mixin MarginALL($r) {
+  @include Margin($r, $r, $r, $r);
+}
+@mixin ScrollMarginTopWH($h) {
+  scroll-margin-top: 1vw * $heightRatio * $h !important;
+}
+
+.up-arrow {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  @include BorderLeft(4, solid, transparent);
+  @include BorderRight(4, solid, transparent);
+  @include BorderBottom(6, solid, #000);
+  /* 与文字间距 */
+  vertical-align: middle;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.right-arrow {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  @include BorderLeft(6, solid, transparent);
+  @include BorderRight(4, solid, transparent);
+  @include BorderTop(4, solid, transparent);
+  vertical-align: middle;
+  text-align: center;
+  transition: all 0.3s;
+}
+.hover-bigger {
+  transition: transform 0.25s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.hover-biggerM {
+  transition: transform 0.25s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+@mixin Blur($r) {
+  filter: blur(math.div(1vw * $r, $widthRatio));
+}

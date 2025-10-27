@@ -45,6 +45,12 @@ importers:
       eslint-plugin-vue:
         specifier: ^10.5.1
         version: 10.5.1(@typescript-eslint/parser@8.46.2(eslint@9.38.0)(typescript@5.9.3))(eslint@9.38.0)(vue-eslint-parser@10.2.0(eslint@9.38.0))
+      postcss-px-to-viewport:
+        specifier: ^1.1.1
+        version: 1.1.1
+      postcss-pxtorem:
+        specifier: ^6.1.0
+        version: 6.1.0(postcss@8.5.6)
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -905,6 +911,10 @@ packages:
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
+  object-assign@4.1.1:
+    resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
+    engines: {node: '>=0.10.0'}
+
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
     engines: {node: '>= 0.8.0'}
@@ -939,6 +949,14 @@ packages:
   picomatch@4.0.3:
     resolution: {integrity: sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==}
     engines: {node: '>=12'}
+
+  postcss-px-to-viewport@1.1.1:
+    resolution: {integrity: sha512-2x9oGnBms+e0cYtBJOZdlwrFg/mLR4P1g2IFu7jYKvnqnH/HLhoKyareW2Q/x4sg0BgklHlP1qeWo2oCyPm8FQ==}
+
+  postcss-pxtorem@6.1.0:
+    resolution: {integrity: sha512-ROODSNci9ADal3zUcPHOF/K83TiCgNSPXQFSbwyPHNV8ioHIE4SaC+FPOufd8jsr5jV2uIz29v1Uqy1c4ov42g==}
+    peerDependencies:
+      postcss: ^8.0.0
 
   postcss-selector-parser@6.1.2:
     resolution: {integrity: sha512-Q8qQfPiZ+THO/3ZrOrO0cJJKfpYCagtMUkXbnEfmgUjwXg6z/WBeOyS9APBBPCTSiDV+s4SwQGu8yFsiMRIudg==}
@@ -1919,6 +1937,8 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
+  object-assign@4.1.1: {}
+
   optionator@0.9.4:
     dependencies:
       deep-is: 0.1.4
@@ -1949,6 +1969,15 @@ snapshots:
   picomatch@2.3.1: {}
 
   picomatch@4.0.3: {}
+
+  postcss-px-to-viewport@1.1.1:
+    dependencies:
+      object-assign: 4.1.1
+      postcss: 8.5.6
+
+  postcss-pxtorem@6.1.0(postcss@8.5.6):
+    dependencies:
+      postcss: 8.5.6
 
   postcss-selector-parser@6.1.2:
     dependencies:
