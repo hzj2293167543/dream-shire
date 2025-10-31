@@ -18,6 +18,7 @@
       ref="editorRef"
       class="editor"
       contenteditable
+      spellcheck="false"
       @mouseup="updateActive"
       @keyup="updateActive"
     >
@@ -67,13 +68,17 @@
   function isInsignificantWhitespace(node: Node): boolean {
     if (node.nodeType !== Node.TEXT_NODE) return false;
     const text = node.nodeValue || '';
-    if (!/^\s*$/.test(text)) return false; // 非纯空白 → 用户输入
 
-    const prev = node.previousSibling;
-    const next = node.nextSibling;
+    // 1. 必须全是空白符
+    if (!/^\s*$/.test(text)) return false;
 
-    // 如果前后都是元素节点，说明这个空白是浏览器为了格式化插入的
-    return prev?.nodeType === Node.ELEMENT_NODE && next?.nodeType === Node.ELEMENT_NODE;
+    // 2. 如果里面出现一个普通空格或 &nbsp;，就认为“用户想留”
+    if (/[ \u00A0]/.test(text)) return false;
+
+    // 3. 在 <pre> 或 white-space:pre* 环境里也不动
+    if (node.parentElement?.closest('pre,[style*="white-space:pre"]')) return false;
+
+    return true; // 纯格式化空白，可删
   }
   /**
    * 把 elem 子树里所有相邻/嵌套的同名标签合并成一层
@@ -83,6 +88,8 @@
   function mergeAdjacentSameTags(parent: Element, tagName: string) {
     console.log('mergeAdjacentSameTags', parent, tagName);
     let cur: Element | null = parent.firstElementChild;
+    console.log('cur', cur);
+    console.log('next', parent.firstElementChild);
     while (cur) {
       // 下一个“节点”（可能是 TextNode）
       let next = cur.nextSibling;
@@ -153,6 +160,7 @@
       while (wrapper.firstChild) parent.insertBefore(wrapper.firstChild, wrapper);
       parent.removeChild(wrapper);
     }
+    mergeAdjacentSameTags(node.parentElement!, node.nodeType);
   }
 
   /* ---------------- 辅助 ---------------- */
@@ -243,7 +251,10 @@
       border: 1px solid #ccc;
       border-radius: 4px;
       outline: none;
-
+      font-size: 0;
+      * {
+        font-size: 16px;
+      }
       &:focus {
         border-color: #409eff;
         box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);

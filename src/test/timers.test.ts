@@ -80,19 +80,19 @@ describe('clearTimeoutWithKey 递归删除子树', () => {
   });
 });
 
-/* ---------------- 顺序队列 recRun ---------------- */
-describe('recRun', () => {
+/* ---------------- 顺序队列 recSetTimeout ---------------- */
+describe('recSetTimeout', () => {
   jest.useFakeTimers();
   afterEach(() => jest.clearAllTimers());
 
   it('空数组立即返回 cancel', () => {
-    const ctrl = timer.recRun([], 100);
+    const ctrl = timer.recSetTimeout([], 100);
     expect(typeof ctrl.cancel).toBe('function');
   });
 
   it('顺序执行 + 中途取消', () => {
     const calls: number[] = [];
-    const ctrl = timer.recRun(
+    const ctrl = timer.recSetTimeout(
       [0, 1, 2].map((i) => () => calls.push(i)),
       10
     );
@@ -107,7 +107,7 @@ describe('recRun', () => {
 
   it('数组间隔策略', () => {
     const calls: number[] = [];
-    timer.recRun(
+    timer.recSetTimeout(
       [0, 1, 2].map((i) => () => calls.push(i)),
       [20, 30, 40]
     );
@@ -119,7 +119,7 @@ describe('recRun', () => {
 
   it('函数策略', () => {
     const calls: number[] = [];
-    timer.recRun(
+    timer.recSetTimeout(
       [0, 1].map((i) => () => calls.push(i)),
       (i) => (i + 1) * 10
     );
@@ -130,12 +130,14 @@ describe('recRun', () => {
   });
 
   it('非法策略抛错', () => {
-    expect(() => timer.recRun([() => {}], {} as any)).toThrow(/timeout 必须是数字、数组、函数/);
+    expect(() => timer.recSetTimeout([() => {}], {} as any)).toThrow(
+      /timeout 必须是数字、数组、函数/
+    );
   });
 
   it('延迟为 0 仍顺序执行', () => {
     const calls: number[] = [];
-    timer.recRun([() => calls.push(1), () => calls.push(2)], 0);
+    timer.recSetTimeout([() => calls.push(1), () => calls.push(2)], 0);
     jest.runAllTimers();
     expect(calls).toEqual([1, 2]);
   });

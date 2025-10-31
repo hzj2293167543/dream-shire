@@ -118,7 +118,7 @@ interface RecRunController {
   cancel: () => void;
 }
 // 顺序执行队列
-export function recRun(
+export function recSetTimeout(
   fns: (() => void)[],
   timeout: number | number[] | ((i: number) => number),
   path: Path = ['recRun']
