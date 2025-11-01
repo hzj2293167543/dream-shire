@@ -35,25 +35,25 @@ module.exports = {
         }
       }
     ],
-    // 'prettier/prettier': [
-    //   'error',
-    //   {
-    //     printWidth: 100,
-    //     tabWidth: 2,
-    //     useTabs: false,
-    //     semi: true,
-    //     singleQuote: true,
-    //     quoteProps: 'as-needed',
-    //     jsxSingleQuote: true,
-    //     trailingComma: 'none',
-    //     bracketSpacing: true,
-    //     bracketSameLine: false,
-    //     arrowParens: 'always',
-    //     endOfLine: 'lf',
-    //     vueIndentScriptAndStyle: true,
-    //     htmlWhitespaceSensitivity: 'ignore'
-    //   }
-    // ],
+    'prettier/prettier': [
+      'error',
+      {
+        printWidth: 100,
+        tabWidth: 2,
+        useTabs: false,
+        semi: true,
+        singleQuote: true,
+        quoteProps: 'as-needed',
+        jsxSingleQuote: true,
+        trailingComma: 'none',
+        bracketSpacing: true,
+        bracketSameLine: false,
+        arrowParens: 'always',
+        endOfLine: 'lf',
+        vueIndentScriptAndStyle: true,
+        htmlWhitespaceSensitivity: 'ignore'
+      }
+    ],
     // 通用规则
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
