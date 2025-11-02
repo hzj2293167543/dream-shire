@@ -1,12 +1,26 @@
 <template>
-  <router-view></router-view>
+  <!-- <component :is="layout"> -->
+  <RouterView />
+  <!-- </component> -->
 </template>
-<script setup>
-import HelloWorld from "./components/HelloWorld.vue";
+<script setup lang="ts">
+  //   import { computed } from 'vue';
+  //   import { useRoute } from 'vue-router';
+  //   import DefaultLayout from '@/layouts/default.vue';
+
+  //   const route = useRoute();
+
+  //   const layout = computed(() => {
+  //     const name = (route.meta?.layout as string) || 'default';
+  //     if (name === 'default') return DefaultLayout;
+
+  //     // 动态加载其他布局
+  //     return () => import(`@/layouts/${name}.vue`);
+  //   });
 </script>
 
 <style scoped>
-/* .logo {
+  /* .logo {
     height: 6em;
     padding: 1.5em;
     will-change: filter;

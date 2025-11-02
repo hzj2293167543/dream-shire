@@ -1,7 +1,6 @@
 <template>
   <Header />
   <main>
-    <!-- <span>默认布局</span> -->
     <RouterView />
   </main>
   <footer></footer>
