@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <span>你好，欢迎来到幻想乡</span>
+    <span>你好，欢迎来到dream shire</span>
   </div>
 </template>
 

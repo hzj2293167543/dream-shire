@@ -1,5 +1,5 @@
 import { throttle } from '@/utils/utils';
-import { ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 
 export const useEditor = () => {
   type Cmd = '粗体' | '斜体' | '下划线';
@@ -24,6 +24,7 @@ export const useEditor = () => {
     if (range.collapsed) return; // 未选中文字
 
     // 如果已经包裹了相同标签 →  unwrap
+    console.log(hasWrappedTags(range, tag));
     if (hasWrappedTags(range, tag)) {
       unwrap(range, tag);
     } else {
@@ -60,10 +61,7 @@ export const useEditor = () => {
    * @param tagName  要合并的标签名，如 'B'
    */
   function mergeAdjacentSameTags(parent: Element, tagName: string) {
-    console.log('mergeAdjacentSameTags', parent, tagName);
     let cur: Element | null = parent.firstElementChild;
-    console.log('cur', cur);
-    console.log('next', parent.firstElementChild);
     while (cur) {
       // 下一个“节点”（可能是 TextNode）
       let next = cur.nextSibling;
@@ -85,21 +83,16 @@ export const useEditor = () => {
 
       cur = cur.nextElementSibling;
     }
-    console.log('merged', parent);
   }
   // 跨标签处理
   function wrapCrossRange(range: Range, tagName: string) {
     const newParent = document.createElement(tagName);
-
     // 1️⃣ 整颗剪下
     const fragment = range.extractContents(); // DocumentFragment
-
     // 2️⃣ 塞进新标签
     newParent.appendChild(fragment);
-
     // 3️⃣ 插回原位
     range.insertNode(newParent);
-
     // 4️⃣ 选区重新框住新标签内部
     range.selectNodeContents(newParent);
   }
@@ -129,15 +122,65 @@ export const useEditor = () => {
         ? node.parentElement!.closest(tagName)
         : (node as Element).closest(tagName);
 
+    console.log(wrapper);
     if (wrapper) {
+      console.log(wrapper);
       const parent = wrapper.parentNode!;
+      console.log(parent);
       while (wrapper.firstChild) parent.insertBefore(wrapper.firstChild, wrapper);
       parent.removeChild(wrapper);
+    } else {
+      unwrapCrossRange(range, tagName);
     }
     // 解包时合并相邻标签
     // mergeAdjacentSameTags(node.parentElement!, node.nodeType);
   }
 
+  function unwrapCrossRange(range: Range, tagName: string): void {
+    // 1. 克隆选区内容
+    const fragment = range.cloneContents(); // <DocumentFragment>
+
+    // 2. 收集 fragment 内所有目标标签
+    const wrappers: HTMLElement[] = [];
+    const iter = document.createNodeIterator(fragment, NodeFilter.SHOW_ELEMENT, (n) =>
+      n.nodeName === tagName.toUpperCase() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP
+    );
+    let node: Element | null;
+    while ((node = iter.nextNode() as Element)) wrappers.push(node as HTMLElement);
+
+    // 3. 对每一段 wrapper 做「解包」
+    wrappers.forEach((wrapper) => {
+      const parent = wrapper.parentNode!;
+      while (wrapper.firstChild) parent.insertBefore(wrapper.firstChild, wrapper);
+      parent.removeChild(wrapper);
+      clearEmptyTag(wrapper);
+    });
+
+    // 4. 删除原选区内容，把解包后的 fragment 插回去
+    range.deleteContents();
+    range.insertNode(fragment); // 此时 fragment 里已没有 wrapper 标签
+  }
+
+  /**
+   * 从指定节点开始，向上递归删除所有「空」祖先
+   * 空 = 没有文本、没有元素子节点
+   * @param node 起点（一般传 wrapper 本身）
+   */
+  function clearEmptyTag(node: Node): void {
+    let current: Node | null = node;
+    while (current) {
+      const parent = current.parentNode;
+      if (!parent) break;
+
+      // 判断当前节点是否“空”
+      const isEmpty = current.nodeType === Node.ELEMENT_NODE && current.textContent!.trim() === '';
+
+      if (!isEmpty) break;
+
+      parent.removeChild(current);
+      current = parent; // 继续向上
+    }
+  }
   /* ---------------- 辅助 ---------------- */
   function isWrapped(range: Range, tagName: string): boolean {
     const sel = window.getSelection();
@@ -186,10 +229,21 @@ export const useEditor = () => {
     activeTag.value = getWrappedTags(range);
   }
 
-  function onMouseMove(e: MouseEvent) {
-    if (!(e.buttons & 1)) return;
-    return throttle(updateActive, 2e2);
-  }
+  const onMouseMove = throttle(
+    (e: MouseEvent) => {
+      if (!(e.buttons & 1)) return;
+      updateActive();
+      return;
+    },
+    2e2,
+    { leading: true }
+  );
+  onMounted(() => {
+    document.addEventListener('mousemove', onMouseMove);
+  });
+  onUnmounted(() => {
+    document.removeEventListener('mousemove', onMouseMove);
+  });
   return {
     activeTag,
     onMouseMove,

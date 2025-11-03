@@ -2,7 +2,7 @@
   <nav class="header">
     <div class="header-logo">
       <img class="header-logo-img" src="@/assets/imgs/logo.svg" alt="logo" />
-      <span>幻想乡</span>
+      <span>dream shire</span>
     </div>
     <ul class="header-nav">
       <li><router-link to="/">首页</router-link></li>
@@ -19,6 +19,7 @@
     @include FSC;
     .header-logo {
       @include FCC;
+      gap: 10px;
       width: 500px;
       height: 100px;
     }
