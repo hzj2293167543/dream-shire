@@ -18,20 +18,24 @@ export const useEditor = () => {
   function toggleFormat(cmd: Cmd) {
     const tag = tagMap[cmd];
     const sel = window.getSelection();
+    console.log(sel, tag);
     if (!sel || sel.rangeCount === 0) return;
 
     const range = sel.getRangeAt(0);
-    if (range.collapsed) return; // 未选中文字
+    // if (range.collapsed) return; // 未选中文字
 
     // 如果已经包裹了相同标签 →  unwrap
     console.log(hasWrappedTags(range, tag));
-    if (hasWrappedTags(range, tag)) {
-      unwrap(range, tag);
+    if (range.collapsed) {
+      // 未选中文字m
     } else {
-      wrap(range, tag);
+      if (hasWrappedTags(range, tag)) {
+        unwrap(range, tag);
+      } else {
+        wrap(range, tag);
+      }
     }
 
-    console.log(sel);
     // 恢复选区并刷新激活状态
     sel.removeAllRanges();
     sel.addRange(range);
@@ -169,7 +173,7 @@ export const useEditor = () => {
   function clearEmptyTag(node: Node): void {
     let current: Node | null = node;
     while (current) {
-      const parent = current.parentNode;
+      const parent: ParentNode | null = current.parentNode;
       if (!parent) break;
 
       // 判断当前节点是否“空”

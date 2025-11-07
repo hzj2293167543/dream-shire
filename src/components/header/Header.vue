@@ -8,6 +8,7 @@
       <li><router-link to="/">首页</router-link></li>
       <li><router-link to="/rich-text-editor">富文本编辑器</router-link></li>
       <li><router-link to="/song-player">歌曲播放器</router-link></li>
+      <li><router-link to="/export-file">导出文件</router-link></li>
     </ul>
   </nav>
 </template>
