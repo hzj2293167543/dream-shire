@@ -105,7 +105,7 @@ export const useEditor = () => {
     const node = document.createElement(tagName);
     try {
       range.surroundContents(node);
-    } catch (e) {
+    } catch {
       wrapCrossRange(range, tagName);
     }
 

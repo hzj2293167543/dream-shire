@@ -11,9 +11,15 @@ importers:
 
   .:
     dependencies:
+      '@tinymce/tinymce-vue':
+        specifier: ^4.0.0
+        version: 4.0.7(vue@3.6.0-alpha.2(typescript@5.9.3))
       jest:
         specifier: ^30.2.0
         version: 30.2.0(@types/node@24.9.1)
+      tinymce:
+        specifier: ^8.2.1
+        version: 8.2.1
       tsx:
         specifier: ^4.20.6
         version: 4.20.6
@@ -800,6 +806,11 @@ packages:
 
   '@sinonjs/fake-timers@13.0.5':
     resolution: {integrity: sha512-36/hTbH2uaWuGVERyC6da9YwGWnzUZXuPro/F2LfsdOsLnCojz/iSH8MxUt/FD2S5XBSVPhmArFUXcpCQ2Hkiw==}
+
+  '@tinymce/tinymce-vue@4.0.7':
+    resolution: {integrity: sha512-1esB8wGWrjPCY+rK8vy3QB1cxwXo7HLJWuNrcyPl6LOVR+QJjub0OiV/C+TUEsLN6OpCtRv+QnIqMC5vXz783Q==}
+    peerDependencies:
+      vue: ^3.0.0
 
   '@tybys/wasm-util@0.10.1':
     resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
@@ -2342,6 +2353,12 @@ packages:
     resolution: {integrity: sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==}
     engines: {node: '>=12.0.0'}
 
+  tinymce@5.10.9:
+    resolution: {integrity: sha512-5bkrors87X9LhYX2xq8GgPHrIgJYHl87YNs+kBcjQ5I3CiUgzo/vFcGvT3MZQ9QHsEeYMhYO6a5CLGGffR8hMg==}
+
+  tinymce@8.2.1:
+    resolution: {integrity: sha512-gbZJH91f91jLfD39juLt/oiAMoaxwTquJMJZR0A1uzcOVrddo8hI/2Y+Uji0/vPudmbDxatnmfIG/9/j3KzP0g==}
+
   tmpl@1.0.5:
     resolution: {integrity: sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==}
 
@@ -3251,6 +3268,11 @@ snapshots:
   '@sinonjs/fake-timers@13.0.5':
     dependencies:
       '@sinonjs/commons': 3.0.1
+
+  '@tinymce/tinymce-vue@4.0.7(vue@3.6.0-alpha.2(typescript@5.9.3))':
+    dependencies:
+      tinymce: 5.10.9
+      vue: 3.6.0-alpha.2(typescript@5.9.3)
 
   '@tybys/wasm-util@0.10.1':
     dependencies:
@@ -4920,6 +4942,10 @@ snapshots:
     dependencies:
       fdir: 6.5.0(picomatch@4.0.3)
       picomatch: 4.0.3
+
+  tinymce@5.10.9: {}
+
+  tinymce@8.2.1: {}
 
   tmpl@1.0.5: {}
 
