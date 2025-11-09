@@ -41,7 +41,7 @@
   import TinyMCEEditor from './components/TinyMCE.vue';
   //   import { useTinyMCE } from './composables/useTinyMCE';
 
-  const { activeTag, updateActive, toggleFormat, tagMap, operations } = useEditor();
+  const { activeTag, updateActive, toggleFormat, tagMap, operations, editorRef } = useEditor();
   import { ref } from 'vue';
 
   const articleContent = ref('<p>请输入内容...</p>');

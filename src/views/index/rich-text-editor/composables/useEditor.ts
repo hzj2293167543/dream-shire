@@ -18,17 +18,15 @@ export const useEditor = () => {
   function toggleFormat(cmd: Cmd) {
     const tag = tagMap[cmd];
     const sel = window.getSelection();
-    console.log(sel, tag);
     if (!sel || sel.rangeCount === 0) return;
 
     const range = sel.getRangeAt(0);
-    // if (range.collapsed) return; // 未选中文字
-
-    // 如果已经包裹了相同标签 →  unwrap
-    console.log(hasWrappedTags(range, tag));
+    // 如果已经包裹了相同标签 → unwrap
     if (range.collapsed) {
-      // 未选中文字m
+      handleCollapsed(sel, range, tag);
+      return;
     } else {
+      // 正常处理选中文本的情况
       if (hasWrappedTags(range, tag)) {
         unwrap(range, tag);
       } else {
@@ -43,22 +41,170 @@ export const useEditor = () => {
   }
 
   /**
-   * 判断是否是“格式化空白”（用户刻意留的空格或 &nbsp; 除外） 也就是排除\n \t \r
-   * @param node 要检查的节点
-   * @returns 是否是格式化空白
+   * 处理折叠选区的情况（光标在文本节点内）
+   * @param sel 当前选区
+   * @param range 当前选区范围
+   * @param tag 要操作的标签
+   * @returns
+   */
+  function handleCollapsed(sel: Selection, range: Range, tag: Tag) {
+    const textNode = findNextText(range);
+    if (!textNode) return;
+
+    // 1. 同时保存节点引用和 Range 标记
+    // 记录文本节点的"身份标识"（用 Range 标记它在编辑器中的位置）
+    const targetNode = textNode;
+    const originalOffset = range.startContainer === textNode ? range.startOffset : 0;
+    const nodeMarker = document.createRange();
+    nodeMarker.selectNode(textNode); // 标记整个节点
+
+    // 2. 记录父元素（用于 unwrap 后查找）
+    const parentElement = textNode.parentElement;
+
+    // 3. 执行格式化
+    const formatRange = document.createRange();
+    formatRange.selectNodeContents(targetNode);
+    const isWrapped = hasWrappedTags(formatRange, tag);
+
+    if (isWrapped) {
+      unwrap(formatRange, tag);
+    } else {
+      wrap(formatRange, tag);
+    }
+
+    // 4. 根据操作类型选择不同的恢复策略
+    let finalNode: Node | null = null;
+
+    if (!isWrapped) {
+      // ✅ wrap 后：在标记位置查找格式化后的第一个有效节点
+      // nodeMarker 现在指向 <b> 元素（因为文本节点被包裹）
+      const wrapper =
+        nodeMarker.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+          ? (nodeMarker.commonAncestorContainer as Element).querySelector(tag)
+          : nodeMarker.commonAncestorContainer.parentElement?.querySelector(tag) || null;
+
+      if (wrapper) {
+        // 在包裹元素内查找第一个非空文本节点（绝对安全）
+        const walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT, {
+          acceptNode: (node) =>
+            (node.textContent || '').trim().length > 0
+              ? NodeFilter.FILTER_ACCEPT
+              : NodeFilter.FILTER_SKIP
+        });
+        finalNode = walker.nextNode();
+      }
+    } else {
+      // ✅ unwrap 后：用父元素 + 原始节点双重保险定位
+      // 文本节点被提升回原父级，targetNode 引用通常仍有效
+      if (document.body.contains(targetNode) && targetNode.textContent) {
+        // 优先使用原始节点引用（最准确）
+        finalNode = targetNode;
+      } else if (parentElement && document.body.contains(parentElement)) {
+        // 如果原始节点失效，用父元素查找
+        const walker = document.createTreeWalker(parentElement, NodeFilter.SHOW_TEXT, {
+          acceptNode: (node) =>
+            (node.textContent || '').trim().length > 0
+              ? NodeFilter.FILTER_ACCEPT
+              : NodeFilter.FILTER_SKIP
+        });
+        finalNode = walker.nextNode();
+      }
+    }
+
+    // 5. 最终验证
+    if (!finalNode || !finalNode.textContent || !document.body.contains(finalNode)) {
+      console.error('无法定位有效节点，光标恢复失败');
+      // 最后的 fallback：将光标放在操作位置的附近
+      const fallbackRange = document.createRange();
+      fallbackRange.selectNodeContents(editorRef.value!);
+      fallbackRange.collapse(true);
+      sel.addRange(fallbackRange);
+      updateActive();
+      return;
+    }
+
+    // 6. 重建光标（始终在原始字符偏移位置）
+    const newRange = document.createRange();
+    const maxOffset = finalNode.textContent?.length || 0;
+    const finalOffset = Math.min(originalOffset, maxOffset);
+
+    newRange.setStart(finalNode, finalOffset);
+    newRange.collapse(true);
+
+    sel.removeAllRanges();
+    sel.addRange(newRange);
+    updateActive();
+  }
+  /**
+   * 查找光标后的第一个有效文本节点
+   * @param range 当前选区
+   * @returns 文本节点或 null
+   */
+  function findNextText(range: Range): Text | null {
+    const container = range.startContainer;
+    const offset = range.startOffset;
+    const editor = editorRef.value;
+    console.log(container, offset, editorRef, editor);
+
+    if (!editor) return null;
+
+    // 创建树遍历器，只返回有效文本节点
+    const walker = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT, {
+      acceptNode: (node) => {
+        // 跳过纯格式化空白和空文本
+        if (isInsignificantWhitespace(node)) {
+          return NodeFilter.FILTER_SKIP;
+        }
+        const text = node.textContent || '';
+        if (text.trim().length === 0) {
+          return NodeFilter.FILTER_SKIP;
+        }
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+
+    // 情况1: 光标在文本节点内
+    if (container.nodeType === Node.TEXT_NODE) {
+      const textNode = container as Text;
+      const text = textNode.textContent || '';
+
+      // 如果光标不在末尾，返回当前节点（格式化当前节点）
+      if (offset < text.length) {
+        return textNode;
+      }
+
+      // 光标在末尾，查找下一个
+      walker.currentNode = textNode;
+      const nextNode = walker.nextNode();
+      return nextNode as Text | null;
+    }
+
+    // 情况2: 光标在元素节点上
+    walker.currentNode = container;
+    const nextNode = walker.nextNode();
+    return nextNode as Text | null;
+  }
+
+  /* ---------------- 辅助函数 ---------------- */
+  /**
+   * 判断是否是格式化空白（可删除的换行、制表等）
    */
   function isInsignificantWhitespace(node: Node): boolean {
     if (node.nodeType !== Node.TEXT_NODE) return false;
     const text = node.nodeValue || '';
-    // 1. 必须全是空白符
+
+    // 必须全是空白符
     if (!/^\s*$/.test(text)) return false;
-    // 2. 如果里面出现一个普通空格或 &nbsp;，就认为“用户想留”
+
+    // 如果包含普通空格或 &nbsp;，认为用户想保留
     if (/[ \u00A0]/.test(text)) return false;
-    // 3. 在 <pre> 或 white-space:pre* 环境里也不动
-    if (node.parentElement?.closest('pre,[style*="white-space:pre"]')) return false;
+
+    // 在 <pre> 或 white-space:pre* 环境保留
+    if (node.parentElement?.closest('pre, [style*="white-space:pre"]')) return false;
 
     return true; // 纯格式化空白，可删
   }
+
   /**
    * 把 elem 子树里所有相邻/嵌套的同名标签合并成一层
    * @param elem     要扫描的根（即刚插入的 <b>）
@@ -67,7 +213,7 @@ export const useEditor = () => {
   function mergeAdjacentSameTags(parent: Element, tagName: string) {
     let cur: Element | null = parent.firstElementChild;
     while (cur) {
-      // 下一个“节点”（可能是 TextNode）
+      // 下一个“节点”（可能是 Text）
       let next = cur.nextSibling;
       while (next && isInsignificantWhitespace(next)) {
         next = next.nextSibling;
@@ -109,7 +255,7 @@ export const useEditor = () => {
       wrapCrossRange(range, tagName);
     }
 
-    // stripIndentTextNodes(node.parentElement!);
+    // stripIndentTexts(node.parentElement!);
     // 🔽 保证不套娃
     mergeAdjacentSameTags(node.parentElement!, tagName);
 
@@ -119,18 +265,14 @@ export const useEditor = () => {
 
   /* ---------------- unwrap ---------------- */
   function unwrap(range: Range, tagName: string) {
-    console.log(range, tagName);
     const node = range.commonAncestorContainer;
     const wrapper =
       node.nodeType === Node.TEXT_NODE
         ? node.parentElement!.closest(tagName)
         : (node as Element).closest(tagName);
 
-    console.log(wrapper);
     if (wrapper) {
-      console.log(wrapper);
       const parent = wrapper.parentNode!;
-      console.log(parent);
       while (wrapper.firstChild) parent.insertBefore(wrapper.firstChild, wrapper);
       parent.removeChild(wrapper);
     } else {
@@ -190,7 +332,7 @@ export const useEditor = () => {
     const sel = window.getSelection();
     if (!sel || sel.rangeCount === 0) return false;
 
-    // 1. 拿到用户选区所在的行（这里简单用“同一个 TextNode”当一行，
+    // 1. 拿到用户选区所在的行（这里简单用“同一个 Text”当一行，
     //    如果编辑器里一行就是一个 p/div，可换成 closest('p') 之类的逻辑）
     const userRange = sel.getRangeAt(0);
     const startContainer = userRange.startContainer;
