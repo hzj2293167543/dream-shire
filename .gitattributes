@@ -1,0 +1,36 @@
+# .gitattributes
+# ============== 语言统计 ==============
+public/* linguist-vendored
+dist/* linguist-generated=true
+stats.json linguist-generated=true
+
+# ============== 换行符 ==============
+* text=auto
+*.ts text eol=lf
+*.tsx text eol=lf
+*.vue text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.sh text eol=lf
+
+# ============== 二进制文件 ==============
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.mp3 binary
+*.mp4 binary
+*.pdf binary
+*.zip binary
+*.tar.gz binary
+
+# ============== 合并策略 ==============
+package-lock.json merge=ours
+yarn.lock merge=ours
