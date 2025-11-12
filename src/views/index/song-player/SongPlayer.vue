@@ -11,6 +11,10 @@
 
 <script setup lang="ts">
   import { onMounted, onUnmounted, ref } from 'vue';
+  import { light } from './composables/song-data/song';
+  import { parseLyric } from './composables/utils/songPlayer';
+  const songData = parseLyric(light.lyric);
+  console.log(songData);
 
   const transformY = ref(0);
   const intervalId = ref();

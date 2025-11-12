@@ -1,8 +1,8 @@
 # .gitattributes
 # ============== 语言统计 ==============
-public/* linguist-vendored
-dist/* linguist-generated=true
-stats.json linguist-generated=true
+public/** linguist-vendored
+dist/** linguist-generated
+stats.json linguist-generated
 
 # ============== 换行符 ==============
 * text=auto
