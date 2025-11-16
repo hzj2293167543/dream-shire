@@ -29,7 +29,7 @@ export function parseLyric(lyric: string): songData[] {
  * @param songData
  * @returns
  */
-export function getCurrentIndex(currentTime: number, songData: songData[]): number {
+export function findLyricIndex(currentTime: number, songData: songData[]): number {
   for (let i = 0; i < songData.length; i++) {
     if (currentTime < (songData[i].timestamp ?? 0)) {
       return i - 1 > 0 ? i - 1 : 0;
