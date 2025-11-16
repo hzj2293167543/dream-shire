@@ -1,5 +1,5 @@
-@use "./basic.scss" as *;
-@use "./main.scss" as *;
+@use './basic.scss' as *;
+@use './main.scss' as *;
 // dialog背景色
 $dialog-bgColor: #19354ea3;
 // dialog内容背景色
@@ -130,7 +130,7 @@ $fifth-text-color: #20334c;
 // 单位m
 .m-after-content {
   &::after {
-    content: "m";
+    content: 'm';
     margin-left: 0.2em;
     color: #898b98;
     font-size: 0.6em;
@@ -140,7 +140,7 @@ $fifth-text-color: #20334c;
 // 关闭按钮内容，×
 .close-content {
   &::before {
-    content: "\00d7"; /* 乘号 × */
+    content: '\00d7'; /* 乘号 × */
     display: block;
     line-height: 1;
     text-align: center;
@@ -152,4 +152,17 @@ $fifth-text-color: #20334c;
     filter: brightness(0.75);
     cursor: pointer;
   }
+}
+// 屏幕阅读器可见，但是不可见
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(1px, 1px, 1px, 1px) !important; /* 兼容旧浏览器 */
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }

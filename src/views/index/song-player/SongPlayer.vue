@@ -1,6 +1,6 @@
 <template>
-  <div ref="playerRef" class="song-player" :style="styleVar">
-    <div class="song-audio-container">
+  <article ref="playerRef" class="song-player" :style="styleVar">
+    <figure class="song-audio-container">
       <audio
         ref="audioRef"
         class="song-audio"
@@ -10,7 +10,8 @@
         @error="onError"
         @timeupdate="onTimeUpdate"
       ></audio>
-    </div>
+      <figcaption class="song-name">{{ light.name }}</figcaption>
+    </figure>
     <ul v-if="isReady" class="song-list" :style="listStyle">
       <li
         class="song-item"
@@ -21,8 +22,8 @@
         {{ content }}
       </li>
     </ul>
-    <div v-else class="loading">加载中...</div>
-  </div>
+    <p v-else class="loading">加载中...</p>
+  </article>
 </template>
 
 <script setup lang="ts">
@@ -46,10 +47,9 @@
     src: new URL(
       window.location.origin + '/mp3/spectral-monologue.mp3',
       import.meta.url
-    ).toString(), // 字符串直接写
-    lyric: light.lyric, // 字符串直接写
+    ).toString(),
+    lyric: light.lyric,
     config: () => ({
-      // 对象用函数
       lineHeight: 50,
       containerHeight: 780,
       throttleMs: 50
@@ -58,7 +58,7 @@
 
   // DOM 元素引用
   const audioRef = ref<HTMLAudioElement>();
-  const playerRef = ref<HTMLDivElement>(); // 明确类型
+  const playerRef = ref<HTMLDivElement>();
   const isReady = ref(false);
 
   // 常量
@@ -134,14 +134,20 @@
       color: rgb(135, 126, 124);
     }
     .song-audio-container {
-      @include FCC;
+      @include FCC(column);
       height: calc(var(--container-height) / 4);
       z-index: 1;
       width: 100%;
+      gap: 20px;
       background-color: rgb(67, 52, 47);
       .song-audio {
         width: 50%;
         z-index: 1;
+      }
+      .song-name {
+        @include FCC;
+        font-size: 24px;
+        color: rgb(255, 255, 255);
       }
     }
     .song-list {
