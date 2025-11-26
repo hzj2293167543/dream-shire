@@ -16,6 +16,7 @@
     },
     "dependencies": {
         "@tinymce/tinymce-vue": "^4.0.0",
+        "gsap": "^3.13.0",
         "jest": "^30.2.0",
         "tinymce": "^8.2.1",
         "tsx": "^4.20.6",
