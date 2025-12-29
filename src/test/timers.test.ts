@@ -1,7 +1,7 @@
 import * as timer from '../utils/timers';
 
 beforeEach(() => timer.clearTimeoutAll());
-type Path = string[];
+
 /* ---------------- 路径校验 ---------------- */
 describe('路径校验', () => {
   test.each([

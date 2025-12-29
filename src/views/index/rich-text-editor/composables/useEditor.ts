@@ -27,7 +27,7 @@ export const useEditor = () => {
       return;
     } else {
       // 正常处理选中文本的情况
-      if (hasWrappedTags(range, tag)) {
+      if (hasWrappedTags(tag)) {
         unwrap(range, tag);
       } else {
         wrap(range, tag);
@@ -64,7 +64,7 @@ export const useEditor = () => {
     // 3. 执行格式化
     const formatRange = document.createRange();
     formatRange.selectNodeContents(targetNode);
-    const isWrapped = hasWrappedTags(formatRange, tag);
+    const isWrapped = hasWrappedTags(tag);
 
     if (isWrapped) {
       unwrap(formatRange, tag);
@@ -328,11 +328,11 @@ export const useEditor = () => {
     }
   }
   /* ---------------- 辅助 ---------------- */
-  function isWrapped(range: Range, tagName: string): boolean {
+  function isWrapped(tagName: string): boolean {
     const sel = window.getSelection();
     if (!sel || sel.rangeCount === 0) return false;
 
-    // 1. 拿到用户选区所在的行（这里简单用“同一个 Text”当一行，
+    // 1. 拿到用户选区所在的行（这里简单用"同一个 Text"当一行，
     //    如果编辑器里一行就是一个 p/div，可换成 closest('p') 之类的逻辑）
     const userRange = sel.getRangeAt(0);
     const startContainer = userRange.startContainer;
@@ -340,7 +340,7 @@ export const useEditor = () => {
     // 2. 临时 Range：从行首开始
     const tempRange = userRange.cloneRange();
     tempRange.collapse(true); // 收拢到起点
-    // 让选区往前挪到“行首”——浏览器原生 API
+    // 让选区往前挪到"行首"——浏览器原生 API
     tempRange.setStart(startContainer, 0);
     tempRange.collapse(true);
 
@@ -354,25 +354,24 @@ export const useEditor = () => {
     return Boolean(el?.closest(wanted));
   }
 
-  const getWrappedTags = (range: Range) => {
+  const getWrappedTags = () => {
     const wrapped: Tag[] = [];
     for (const op of operations) {
-      if (isWrapped(range, tagMap[op])) {
+      if (isWrapped(tagMap[op])) {
         wrapped.push(tagMap[op]);
       }
     }
     return wrapped;
   };
 
-  const hasWrappedTags = (range: Range, tag: Tag) => {
-    return getWrappedTags(range).includes(tag);
+  const hasWrappedTags = (tag: Tag) => {
+    return getWrappedTags().includes(tag);
   };
 
   function updateActive() {
     const sel = window.getSelection();
     if (!sel || sel.rangeCount === 0) return;
-    const range = sel.getRangeAt(0);
-    activeTag.value = getWrappedTags(range);
+    activeTag.value = getWrappedTags();
   }
 
   const onMouseMove = throttle(

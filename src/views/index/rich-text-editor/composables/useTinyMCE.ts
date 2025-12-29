@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import RichEditor from '@/components/RichEditor.vue';
+
 export function useTinyMCE() {
   const articleContent = ref('<p>请输入内容...</p>');
 
