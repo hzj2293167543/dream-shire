@@ -1,7 +1,7 @@
 <template>
   <div class="export-fire">
     <button @click="handleDownCSV">export csv</button>
-    <button @click="handleOpenPrompt">export csv</button>
+    <button @click="handleOpenPrompt">弹窗</button>
     <!-- <Prompt
       :visible="true"
       :content="[
@@ -60,6 +60,7 @@
     });
   };
 </script>
+
 <style lang="scss" scoped>
   .export-fire {
   }

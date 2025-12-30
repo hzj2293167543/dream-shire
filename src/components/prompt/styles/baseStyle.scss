@@ -218,7 +218,7 @@
       }
 
       .content {
-        overflow-y: auto;
+        // overflow-y: auto; // 移除overflow限制，让全局tooltip可以正常显示
         // display: flex;
         // flex-direction: column;
         /* @include FCC(column); */
@@ -350,3 +350,4 @@
     }
   }
 }
+

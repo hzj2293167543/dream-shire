@@ -1,7 +1,7 @@
 // src/utils/modal.ts
 import { createApp, App } from 'vue';
 import Modal from '@/components/prompt/Prompt.vue'; // 替换为您的实际路径
-
+import draggable from '@/draggable'; // 导入指令
 // 全局弹窗管理器（TypeScript友好版）
 interface ModalManager {
   instance: App | null;
@@ -26,6 +26,7 @@ const ModalManager: ModalManager = {
     });
 
     // 挂载到DOM
+    this.instance.directive('draggable', draggable); // 注册指令
     const container = document.createElement('div');
     document.body.appendChild(container);
     this.instance.mount(container);
@@ -44,4 +45,3 @@ const ModalManager: ModalManager = {
 
 // 挂载到全局（TypeScript会自动识别）
 (window as any).$modal = ModalManager;
-

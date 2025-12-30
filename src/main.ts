@@ -3,7 +3,8 @@ import App from './App.vue';
 import router from './router';
 import './style.css';
 import '@/components/prompt/composables/prompt'; // 导入模态框管理器
-
+import draggable from './draggable'; // 导入指令
 const app = createApp(App);
 app.use(router);
 app.mount('#app');
+app.directive('draggable', draggable);

@@ -1,10 +1,11 @@
 <template>
-  <transition name="el-zoom-in-center">
-    <Teleport to="#app">
+  <Teleport to="#app">
+    <transition name="el-zoom-in-center">
       <div
         :class="[props.styleName ? `theme-${props.styleName}` : 'theme-base-style']"
         v-if="visible"
         ref="currentDom"
+        v-draggable
         :style="{
           '--bg': theme?.bgColor || '#000',
           '--text': theme?.textColor || '#fff',
@@ -33,14 +34,16 @@
             <div class="content">
               <div class="container-item" v-for="(item, index) in contentData" :key="index">
                 <div
-                  class="container-item-title tooltip"
-                  :data-title="overflowStates[index]?.label ? item.label : ''"
+                  class="container-item-title tooltip-wrapper"
+                  @mouseenter="showTooltip($event, item.label, 'label', index)"
+                  @mouseleave="hideTooltip"
                 >
                   <span class="tooltip-text">{{ item.label }}</span>
                 </div>
                 <div
-                  class="container-item-content tooltip"
-                  :data-title="overflowStates[index]?.content ? item.value : ''"
+                  class="container-item-content tooltip-wrapper"
+                  @mouseenter="showTooltip($event, item.value, 'content', index)"
+                  @mouseleave="hideTooltip"
                 >
                   <span class="tooltip-text">{{ item.value }}</span>
                 </div>
@@ -49,8 +52,24 @@
           </div>
         </div>
       </div>
+    </transition>
+
+    <!-- 全局 tooltip 容器 -->
+    <Teleport to="body">
+      <div
+        v-if="activeTooltip.visible"
+        class="global-tooltip"
+        :style="{
+          position: 'fixed',
+          left: activeTooltip.x + 'px',
+          top: activeTooltip.y + 'px',
+          zIndex: 2147483000
+        }"
+      >
+        {{ activeTooltip.content }}
+      </div>
     </Teleport>
-  </transition>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
@@ -106,11 +125,40 @@
     emit('close');
   };
 
-  const ellipsisTextRefs = ref<HTMLElement[]>([]);
-  const currentDom = ref<HTMLElement | null>(null);
-
   // 使用ref数组来动态检测溢出 - 现在为每个项目存储两个状态（标签和内容）
   const overflowStates = ref<{ label: boolean; content: boolean }[]>([]);
+
+  // 全局tooltip状态
+  const activeTooltip = ref({
+    visible: false,
+    content: '',
+    x: 0,
+    y: 0
+  });
+
+  // 显示全局tooltip
+  const showTooltip = (
+    event: MouseEvent,
+    content: string,
+    type: 'label' | 'content',
+    index: number
+  ) => {
+    // 只有在文本溢出时才显示tooltip
+    if (overflowStates.value[index]?.[type]) {
+      const rect = (event.target as HTMLElement).getBoundingClientRect();
+      activeTooltip.value = {
+        visible: true,
+        content,
+        x: rect.left + rect.width / 2,
+        y: rect.top - 10
+      };
+    }
+  };
+
+  // 隐藏全局tooltip
+  const hideTooltip = () => {
+    activeTooltip.value.visible = false;
+  };
 
   // 检测所有文本是否溢出
   const checkTextOverflow = () => {
@@ -118,30 +166,19 @@
       // 获取所有container-item元素
       const containerItems = document.querySelectorAll('.container-item');
       if (containerItems && containerItems.length > 0) {
-        overflowStates.value = Array.from(containerItems).map((item, index) => {
-          const labelEl = item.querySelector('.container-item-title.ellipsis-text') as HTMLElement;
+        overflowStates.value = Array.from(containerItems).map((item) => {
+          const labelEl = item.querySelector('.container-item-title .tooltip-text') as HTMLElement;
           const contentEl = item.querySelector(
-            '.container-item-content.ellipsis-text'
+            '.container-item-content .tooltip-text'
           ) as HTMLElement;
-
-          // 调试信息
-          console.log(`Item ${index} elements:`, { labelEl, contentEl });
 
           // 检查label元素的宽度
           const labelScrollWidth = labelEl?.scrollWidth || 0;
           const labelClientWidth = labelEl?.clientWidth || 0;
-          console.log(`Item ${index} label widths:`, {
-            scrollWidth: labelScrollWidth,
-            clientWidth: labelClientWidth
-          });
 
           // 检查content元素的宽度
           const contentScrollWidth = contentEl?.scrollWidth || 0;
           const contentClientWidth = contentEl?.clientWidth || 0;
-          console.log(`Item ${index} content widths:`, {
-            scrollWidth: contentScrollWidth,
-            clientWidth: contentClientWidth
-          });
 
           const labelOverflow =
             labelEl && labelScrollWidth > 0 && labelClientWidth > 0
@@ -151,11 +188,6 @@
             contentEl && contentScrollWidth > 0 && contentClientWidth > 0
               ? contentScrollWidth > contentClientWidth
               : false;
-
-          console.log(`Item ${index} overflow:`, {
-            label: labelOverflow,
-            content: contentOverflow
-          });
 
           return {
             label: labelOverflow,
@@ -257,5 +289,30 @@
   .tooltip:hover::before {
     opacity: 1;
     visibility: visible;
+  }
+
+  /* 全局tooltip样式 */
+  .global-tooltip {
+    background: #333;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    transform: translateX(-50%) translateY(-100%);
+    margin-top: -8px;
+
+    /* 小箭头 */
+    &::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: #333;
+    }
   }
 </style>
