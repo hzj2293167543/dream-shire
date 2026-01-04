@@ -83,7 +83,7 @@
         label: 'export csv',
         value: new URL('@/assets/imgs/logo.svg', import.meta.url).href
       },
-      styleName: 'base-style',
+      themeName: 'base-style',
       //   theme: {
       //     bgColor: 'rgba(255, 255, 255, 0.98)',
       //     textColor: '#1f2937',

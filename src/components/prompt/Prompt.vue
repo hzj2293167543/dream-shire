@@ -13,6 +13,10 @@
           left: dialogPosition[0] ? dialogPosition[0] + 'px' : '50%',
           top: dialogPosition[1] ? dialogPosition[1] + 'px' : '50%'
         }"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        :aria-describedby="resourceData ? 'modal-resource' : ''"
       >
         <div class="modal-header">
           <h2>{{ title }}</h2>
@@ -74,16 +78,22 @@
 
 <script setup lang="ts">
   import { computed, ref, onMounted, watch, Teleport } from 'vue';
-  import baseTheme from './styles/themes/base.module.scss';
-  import secondTheme from './styles/themes/second.module.scss';
+
+  // 切换theme
+  const themeNameMap: Record<string, string> = {
+    second: 'theme-second-style',
+    base: 'theme-base-style'
+  };
   /**
    * 根据主题名称动态切换主题类
    */
   const currentThemeClass = computed(() => {
-    if (props.themeName === 'second') return secondTheme.themeSecond;
-    return baseTheme.themeBase;
+    if (props.themeName) {
+      return themeNameMap[props.themeName] || 'theme-base-style';
+    }
+    return 'theme-base-style';
   });
-  // 定义类型接口
+
   interface ContentItem {
     key: string;
     label: string;
@@ -115,7 +125,7 @@
       textColor: string;
       borderColor: string;
     };
-    styleName?: string;
+    themeName?: string;
     closeCallback?: () => void;
   }>();
 
@@ -238,3 +248,8 @@
     return props.position || [0, 0]; // Position at top-left, then use CSS to center
   });
 </script>
+
+<style scoped lang="scss">
+  @use './styles/themes/base.module.scss' as *;
+  @use './styles/themes/second.module.scss' as *;
+</style>

@@ -1,0 +1,416 @@
+.theme-second-style {
+  --bg: rgba(255, 255, 255, 0.95);
+  --text: #1f2937;
+  --border: rgba(59, 130, 246, 0.7);
+  --accent: #3b82f6;
+  --shadow: rgba(0, 0, 0, 0.1);
+
+  pointer-events: all;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  box-shadow:
+    0 20px 60px var(--shadow),
+    0 0 0 1px rgba(59, 130, 246, 0.1);
+  z-index: 30000;
+  color: var(--text);
+  text-shadow: none;
+  padding: 20px;
+  border-radius: 20px;
+  letter-spacing: 0;
+  width: 600px;
+  max-width: 90vw;
+  height: auto;
+  max-height: 80vh;
+  overflow: hidden;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), #10b981, #f59e0b, var(--accent));
+    background-size: 200% 100%;
+    animation: rainbowLine 3s linear infinite;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    height: auto;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+    margin: -20px -20px 20px -20px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+
+    .close {
+      position: static;
+      transform: none;
+      font-size: 24px;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .close:hover {
+      color: var(--accent);
+      transform: rotate(90deg);
+    }
+
+    &::after {
+      content: none;
+    }
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 20px;
+    color: var(--text);
+    text-shadow: none;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  .code {
+    font-size: 14px;
+    margin: 0 0 20px 0;
+    line-height: 1;
+    color: #6b7280;
+  }
+
+  .modal-body {
+    height: auto;
+    max-height: calc(80vh - 100px);
+    width: 100%;
+    margin: 0;
+    text-align: left;
+    overflow-y: auto;
+  }
+
+  .modal-body p {
+    display: flex;
+    flex-direction: column;
+    margin: 12px 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    gap: 4px;
+
+    .name {
+      width: 100%;
+      white-space: normal;
+      color: #374151;
+      font-weight: 600;
+    }
+
+    .value {
+      width: 100%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: normal;
+      color: #6b7280;
+    }
+  }
+
+  .modal-body a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .modal-body a:hover {
+    color: #2563eb;
+    text-decoration: underline;
+  }
+
+  // 彩虹线动画
+  @keyframes rainbowLine {
+    0% {
+      background-position: 0% 0%;
+    }
+    100% {
+      background-position: 200% 0%;
+    }
+  }
+
+  // 自定义滚动条样式 - 现代化设计
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--accent), #10b981);
+    border-radius: 3px;
+    border: none;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #2563eb, #059669);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+  }
+
+  .container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 20px;
+    height: auto;
+    margin-top: 0;
+    width: 100%;
+
+    /* 移除网格背景，改为纯色 */
+    background: transparent;
+
+    .resource {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .text {
+      font-size: 16px;
+      color: var(--text);
+      width: 100%;
+      margin: 0;
+      line-height: 1.5;
+      margin-bottom: 12px;
+      font-weight: 600;
+      text-shadow: none;
+      text-align: center;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 12px;
+    }
+
+    img {
+      width: 100%;
+      max-width: 200px;
+      height: auto;
+      margin: 0;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 8px 24px var(--shadow);
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    img:hover {
+      transform: scale(1.05);
+    }
+
+    video {
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      margin: 0;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+
+    .content {
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 0;
+      height: auto;
+      max-height: 400px;
+      width: 100%;
+      padding: 16px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      box-sizing: border-box;
+    }
+
+    .container-item {
+      gap: 16px;
+      margin: 0;
+      white-space: normal;
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      align-items: center;
+      width: 100%;
+      font-size: 14px;
+      background: white;
+      height: auto;
+      min-height: 60px;
+      padding: 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+
+      /* 添加悬停效果 */
+      box-shadow: 0 2px 8px var(--shadow);
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: var(--accent);
+        transform: scaleY(0);
+        transition: transform 0.3s ease;
+      }
+
+      &:hover {
+        background: white;
+        border-color: var(--accent);
+        box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+        transform: translateY(-2px);
+
+        &::before {
+          transform: scaleY(1);
+        }
+      }
+
+      .container-item-title {
+        flex: none;
+        width: auto;
+        flex-shrink: 0;
+        color: #6b7280;
+        font-weight: 600;
+        font-size: 13px;
+        letter-spacing: 0;
+        text-align: right;
+      }
+
+      img {
+        width: 100%;
+        height: auto;
+        max-height: 120px;
+      }
+
+      .container-item-content {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .ellipsis-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+        cursor: pointer;
+        display: inline-block;
+        color: var(--text);
+        font-weight: 400;
+        transition: color 0.2s ease;
+      }
+
+      .ellipsis-text:hover {
+        color: var(--accent);
+      }
+    }
+  }
+}
+
+// 彩虹线动画
+@keyframes rainbowLine {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: -200% 0%;
+  }
+}
+
+.tooltip {
+  width: 100%;
+  position: relative;
+}
+
+.tooltip-text {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  cursor: pointer;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 自定义 tooltip 主体 */
+.tooltip::after {
+  content: attr(data-title); /* 从 data-title 读取内容 */
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-size: 14px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s;
+  z-index: 1000;
+}
+
+/* 小箭头 */
+.tooltip::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #333;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s;
+}
+
+/* 悬停显示 */
+.tooltip:hover::after,
+.tooltip:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 全局tooltip样式 */
+.global-tooltip {
+  background: #333;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-100%);
+  margin-top: -8px;
+
+  /* 小箭头 */
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #333;
+  }
+}

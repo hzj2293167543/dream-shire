@@ -1,0 +1,390 @@
+.theme-base-style {
+  --bg: rgba(13, 27, 42, 0.98);
+  --text: #e0f2fe;
+  --border: rgba(6, 182, 212, 0.5);
+
+  pointer-events: all;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  box-shadow:
+    0 0 20px rgba(6, 182, 212, 0.3),
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  z-index: 30000;
+  color: var(--text);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  padding: 5px 20px 20px 20px;
+  border-radius: 12px;
+  letter-spacing: 1px;
+  width: 450px;
+  height: 500px;
+  overflow: hidden;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.8), transparent);
+    animation: scanLine 3s linear infinite;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    /* @include MarginBottom(15); */
+    font-weight: bold;
+    height: 40px;
+    background: rgba(6, 182, 212, 0.1);
+    margin: -5px -20px 15px -20px;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+
+    .close {
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      font-size: 20px;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.8), transparent);
+    }
+  }
+
+  h2 {
+    margin-left: 10px;
+    font-size: 16px;
+    transform: translateY(-0.25vw);
+    color: var(--text);
+    text-shadow: 0 2px 4px rgba(96, 165, 250, 0.5);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .code {
+    font-size: 12px;
+    margin-left: 48px;
+    margin-bottom: 25px;
+    line-height: 0;
+  }
+
+  .modal-body {
+    /* @include boxWidth(v-bind('props.width')); */
+    /* @include boxwHeight(v-bind('promptStore.height')); */
+    height: calc(100% - 30px);
+    width: 100%;
+    margin: auto;
+    text-align: center;
+  }
+
+  .modal-body p {
+    display: flex;
+    /* @include Width(300); */
+    margin: 16px 0 16px 0;
+    font-family: Robot;
+    font-size: 12px;
+
+    .name {
+      width: 150px;
+      white-space: nowrap;
+      color: rgba(222, 222, 223, 1);
+      /* 超出打点 */
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .value {
+      width: 150px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+
+  .modal-body a {
+    color: #ffc107;
+    text-decoration: underline;
+  }
+
+  // 扫描线动画
+  @keyframes scanLine {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  // 自定义滚动条样式
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 25, 47, 0.5);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(6, 182, 212, 0.6) 0%, rgba(34, 197, 94, 0.6) 100%);
+    border-radius: 4px;
+    border: 1px solid rgba(10, 25, 47, 0.5);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(6, 182, 212, 0.8) 0%, rgba(34, 197, 94, 0.8) 100%);
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.2vw;
+    height: 430px;
+    margin-top: 20px;
+    width: 100%;
+
+    /* 添加网格背景 */
+    background-image:
+      linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-position: -1px -1px;
+    .resource {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .text {
+      font-size: 14px;
+      color: var(--text);
+      width: 90%;
+      margin-left: 5%;
+      line-height: 24px;
+      margin-bottom: 15px;
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(96, 165, 250, 0.5);
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+
+    img {
+      width: 100%;
+      max-width: 170px;
+      height: auto;
+      margin-bottom: 15px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      object-fit: cover;
+    }
+
+    video {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      margin-bottom: 15px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .content {
+      overflow-y: auto;
+      // display: flex;
+      // flex-direction: column;
+      /* @include FCC(column); */
+      // gap: 12px;
+      margin: 0 auto;
+      height: 500px;
+      width: 100%;
+      padding: 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    .container-item {
+      gap: 10px;
+      margin-top: 6px;
+      margin-bottom: 6px;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 90%;
+      font-size: 14px;
+      background: var(--bg);
+      height: 45px;
+      padding: 0 16px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+
+      /* 添加发光效果 */
+      box-shadow: 0 2px 8px rgba(6, 182, 212, 0.2);
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: -100%;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.3), transparent);
+        transition: left 0.5s ease;
+      }
+
+      &:hover {
+        background: var(--bg);
+        border-color: var(--border);
+        box-shadow: 0 4px 16px rgba(6, 182, 212, 0.4);
+        transform: translateY(-2px);
+
+        &::before {
+          left: 100%;
+        }
+      }
+
+      .container-item-title {
+        flex: 1;
+        width: 100px;
+        flex-shrink: 0;
+        color: var(--text);
+        font-weight: 600;
+        font-size: 13px;
+        letter-spacing: 0.5px;
+      }
+
+      img {
+        width: 300px;
+        height: 150px;
+      }
+
+      .container-item-content {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .ellipsis-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+        cursor: default;
+        display: inline-block;
+        color: var(--text);
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.tooltip {
+  width: 100%;
+  position: relative;
+}
+
+.tooltip-text {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  cursor: pointer;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 自定义 tooltip 主体 */
+.tooltip::after {
+  content: attr(data-title); /* 从 data-title 读取内容 */
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-size: 14px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s;
+  z-index: 1000;
+}
+
+/* 小箭头 */
+.tooltip::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #333;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s;
+}
+
+/* 悬停显示 */
+.tooltip:hover::after,
+.tooltip:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 全局tooltip样式 */
+.global-tooltip {
+  background: #333;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-100%);
+  margin-top: -8px;
+
+  /* 小箭头 */
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #333;
+  }
+}
