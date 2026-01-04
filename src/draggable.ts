@@ -98,7 +98,7 @@ export const vDraggable = {
       ensurePosition(el);
 
       // 设置超高z-index确保在最上层
-      el.style.zIndex = (getMaxZIndex() + 1000).toString();
+      el.style.zIndex = (getMaxZIndex() + 1).toString();
       el.classList.add('dragging');
 
       const clientX = e instanceof MouseEvent ? e.clientX : e.touches[0].clientX;

@@ -43,5 +43,17 @@ const ModalManager: ModalManager = {
   }
 };
 
-// 挂载到全局（TypeScript会自动识别）
-(window as any).$modal = ModalManager;
+/**
+ * 显示弹窗
+ * @param options 弹窗参数
+ */
+export const showModal = (options: Record<string, any> = {}) => {
+  ModalManager.show(options);
+};
+
+/**
+ * 隐藏弹窗
+ */
+export const hideModal = () => {
+  ModalManager.hide();
+};

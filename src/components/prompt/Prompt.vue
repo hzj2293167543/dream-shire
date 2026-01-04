@@ -2,22 +2,22 @@
   <Teleport to="#app">
     <transition name="el-zoom-in-center">
       <div
-        :class="[props.styleName ? `theme-${props.styleName}` : 'theme-base-style']"
+        :class="currentThemeClass"
         v-if="visible"
         ref="currentDom"
         v-draggable
         :style="{
           '--bg': theme?.bgColor || '#000',
           '--text': theme?.textColor || '#fff',
-          '--border': theme?.borderColor || '#000'
+          '--border': theme?.borderColor || '#000',
+          left: dialogPosition[0] ? dialogPosition[0] + 'px' : '50%',
+          top: dialogPosition[1] ? dialogPosition[1] + 'px' : '50%'
         }"
       >
         <div class="modal-header">
-          <!-- <img style="width: 3vw; margin-right: 0.5vw" src="@/assets/images/header-gif.gif" alt="" /> -->
           <h2>{{ title }}</h2>
           <span class="close-content close" @click="handleClose"></span>
         </div>
-        <!-- <p class="code">CG-P-10214</p> -->
         <div class="modal-body">
           <div class="container">
             <div class="resource" v-if="resourceData">
@@ -74,7 +74,15 @@
 
 <script setup lang="ts">
   import { computed, ref, onMounted, watch, Teleport } from 'vue';
-
+  import baseTheme from './styles/themes/base.module.scss';
+  import secondTheme from './styles/themes/second.module.scss';
+  /**
+   * 根据主题名称动态切换主题类
+   */
+  const currentThemeClass = computed(() => {
+    if (props.themeName === 'second') return secondTheme.themeSecond;
+    return baseTheme.themeBase;
+  });
   // 定义类型接口
   interface ContentItem {
     key: string;
@@ -162,7 +170,7 @@
 
   // 检测所有文本是否溢出
   const checkTextOverflow = () => {
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       // 获取所有container-item元素
       const containerItems = document.querySelectorAll('.container-item');
       if (containerItems && containerItems.length > 0) {
@@ -195,7 +203,7 @@
           };
         });
       }
-    }, 300); // 增加延迟时间，确保元素完全渲染
+    });
   };
 
   // 监听内容变化，重新检测溢出
@@ -227,92 +235,6 @@
 
   // Simplified center positioning using CSS transform instead of JS calculation
   const dialogPosition = computed(() => {
-    return [0, 0]; // Position at top-left, then use CSS to center
+    return props.position || [0, 0]; // Position at top-left, then use CSS to center
   });
 </script>
-
-<style lang="scss" scoped>
-  @use '@/components/prompt/styles/baseStyle.scss' as *;
-  @use '@/components/prompt/styles/secondStyle.scss' as *;
-  @include baseStyle;
-  @include secondStyle;
-
-  .tooltip {
-    width: 100%;
-    position: relative;
-  }
-
-  .tooltip-text {
-    display: block;
-    width: 100%;
-    overflow: hidden;
-    cursor: pointer;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  /* 自定义 tooltip 主体 */
-  .tooltip::after {
-    content: attr(data-title); /* 从 data-title 读取内容 */
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #333;
-    color: white;
-    padding: 6px 10px;
-    border-radius: 4px;
-    white-space: nowrap;
-    font-size: 14px;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s;
-    z-index: 1000;
-  }
-
-  /* 小箭头 */
-  .tooltip::before {
-    content: '';
-    position: absolute;
-    top: -6px;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 5px solid transparent;
-    border-top-color: #333;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s;
-  }
-
-  /* 悬停显示 */
-  .tooltip:hover::after,
-  .tooltip:hover::before {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  /* 全局tooltip样式 */
-  .global-tooltip {
-    background: #333;
-    color: white;
-    padding: 6px 10px;
-    border-radius: 4px;
-    white-space: nowrap;
-    font-size: 14px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    pointer-events: none;
-    transform: translateX(-50%) translateY(-100%);
-    margin-top: -8px;
-
-    /* 小箭头 */
-    &::after {
-      content: '';
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      border: 5px solid transparent;
-      border-top-color: #333;
-    }
-  }
-</style>

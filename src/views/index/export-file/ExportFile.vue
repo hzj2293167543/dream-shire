@@ -30,13 +30,48 @@
 
 <script setup lang="ts">
   import { useExportFile } from './composables/useExportFile';
-  import Prompt from '@/components/prompt/Prompt.vue';
+  import { showModal } from '@/components/prompt/composables/prompt';
   const { downloadCSV } = useExportFile();
   const handleDownCSV = () => downloadCSV();
   const handleOpenPrompt = () => {
-    (window as any).$modal.show({
+    showModal({
       title: 'Export CSV',
       content: [
+        {
+          key: 'text',
+          label: 'Are you sure you want to export the CSV file?',
+          value: 'Are you sure'
+        },
+        {
+          key: 'text',
+          label: 'Are you sure you want to export the CSV file?',
+          value: 'Are you sure you want to export the CSV file? '
+        },
+        {
+          key: 'text',
+          label: 'Are you sure you want to export the CSV file?',
+          value: 'Are you sure you want to export the CSV file? '
+        },
+        {
+          key: 'text',
+          label: 'Are you sure you want to export the CSV file?',
+          value: 'Are you sure you want to export the CSV file? '
+        },
+        {
+          key: 'text',
+          label: 'Are you sure you want to export the CSV file?',
+          value: 'Are you sure you want to export the CSV file? '
+        },
+        {
+          key: 'text',
+          label: 'Are you sure you want to export the CSV file?',
+          value: 'Are you sure you want to export the CSV file? '
+        },
+        {
+          key: 'text',
+          label: 'Are you sure you want to export the CSV file?',
+          value: 'Are you sure you want to export the CSV file? '
+        },
         {
           key: 'text',
           label: 'Are you sure you want to export the CSV file?',
